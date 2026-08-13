@@ -51,7 +51,7 @@ export class KVStore extends Scope {
 			});
 		}
 
-		this.table.grantReadWriteData(this.handler);
+		this.table.grantReadWriteData(this.executionRole);
 	}
 
 	// ── Runtime methods are not available during CDK synth ────────────────
