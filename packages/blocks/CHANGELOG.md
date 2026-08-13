@@ -1,5 +1,32 @@
 # @aws-blocks/blocks
 
+## 0.2.8
+
+### Patch Changes
+
+- e4b1498: Retry PGlite's WASM initialization on the intermittent `_pg_initdb` `unreachable` trap.
+
+  PGlite defers `initdb` to the first query, which can trap with `unreachable` under memory pressure (notably on CI when several PGlite-backed dev servers boot concurrently) and kill the dev server mid-`runMigrations`. `PGliteEngine` (bb-data) and `DsqlMockEngine` (bb-distributed-data) now force initialization through a shared bounded retry (`initializePgliteWithRetry` in data-common) that closes the aborted WASM instance and boots a fresh one, so a transient init trap recovers instead of crashing the process.
+
+- 8966cfb: fix(telemetry): detect Render and Taskcluster as CI
+
+  Telemetry CI detection (`isCI()`) checked a fixed list of CI env vars but
+  omitted Render and Taskcluster. Render sets `RENDER=true` on every build and
+  service; Taskcluster tasks always set the namespaced `TASKCLUSTER_ROOT_URL`.
+  Runs on those platforms were therefore reported as real user sessions instead
+  of `ci:true`, inflating user metrics. `RENDER` and `TASKCLUSTER_ROOT_URL` are
+  now included in both `isCI()` implementations (`@aws-blocks/core` and
+  `@aws-blocks/create-blocks-app`). The umbrella `@aws-blocks/blocks` gets a patch
+  bump because it re-exports `@aws-blocks/core`.
+
+- Updated dependencies [e4b1498]
+- Updated dependencies [5071079]
+- Updated dependencies [8966cfb]
+- Updated dependencies [b11a75b]
+  - @aws-blocks/bb-data@0.2.5
+  - @aws-blocks/bb-distributed-data@0.1.6
+  - @aws-blocks/core@0.1.19
+
 ## 0.2.7
 
 ### Patch Changes

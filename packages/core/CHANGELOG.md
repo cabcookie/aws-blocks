@@ -1,5 +1,41 @@
 # @aws-blocks/core
 
+## 0.1.19
+
+### Patch Changes
+
+- 5071079: fix(core): make `SandboxDisableDeletionProtection` actually disable DynamoDB deletion protection
+
+  The mixin duck-typed only on the `deletionProtection` property name, but the
+  DynamoDB L1 `CfnTable` behind an L2 `Table` spells it
+  `deletionProtectionEnabled` — and the L2 `Table` never re-exposes the prop. As a
+  result the mixin silently never matched DynamoDB tables: sandbox stacks synthed
+  `DeletionProtectionEnabled: true` and `sandbox:destroy` failed on every
+  protected table, because DynamoDB refuses `DeleteTable` while protection is on
+  regardless of the CloudFormation `DeletionPolicy`.
+
+  The mixin now matches both the `deletionProtection` and
+  `deletionProtectionEnabled` spellings, so DynamoDB tables are cleared through
+  their L1 and consumers no longer need a local `CfnTable` workaround loop.
+  Behavior for other resource types is unchanged: only explicitly-enabled
+  protection is flipped, so unprotected resources still omit the property (Aurora
+  DB instances continue to synth without `DeletionProtection`).
+
+- 8966cfb: fix(telemetry): detect Render and Taskcluster as CI
+
+  Telemetry CI detection (`isCI()`) checked a fixed list of CI env vars but
+  omitted Render and Taskcluster. Render sets `RENDER=true` on every build and
+  service; Taskcluster tasks always set the namespaced `TASKCLUSTER_ROOT_URL`.
+  Runs on those platforms were therefore reported as real user sessions instead
+  of `ci:true`, inflating user metrics. `RENDER` and `TASKCLUSTER_ROOT_URL` are
+  now included in both `isCI()` implementations (`@aws-blocks/core` and
+  `@aws-blocks/create-blocks-app`). The umbrella `@aws-blocks/blocks` gets a patch
+  bump because it re-exports `@aws-blocks/core`.
+
+- b11a75b: Reject primitive and null JSON-RPC params with the standard Invalid Params error.
+- Updated dependencies [940956e]
+  - @aws-blocks/hosting@0.1.9
+
 ## 0.1.18
 
 ### Patch Changes

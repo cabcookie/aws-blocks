@@ -1,5 +1,20 @@
 # @aws-blocks/bb-distributed-data
 
+## 0.1.6
+
+### Patch Changes
+
+- e4b1498: Retry PGlite's WASM initialization on the intermittent `_pg_initdb` `unreachable` trap.
+
+  PGlite defers `initdb` to the first query, which can trap with `unreachable` under memory pressure (notably on CI when several PGlite-backed dev servers boot concurrently) and kill the dev server mid-`runMigrations`. `PGliteEngine` (bb-data) and `DsqlMockEngine` (bb-distributed-data) now force initialization through a shared bounded retry (`initializePgliteWithRetry` in data-common) that closes the aborted WASM instance and boots a fresh one, so a transient init trap recovers instead of crashing the process.
+
+- Updated dependencies [e4b1498]
+- Updated dependencies [5071079]
+- Updated dependencies [8966cfb]
+- Updated dependencies [b11a75b]
+  - @aws-blocks/data-common@0.1.4
+  - @aws-blocks/core@0.1.19
+
 ## 0.1.5
 
 ### Patch Changes
