@@ -84,7 +84,6 @@ linter:
     - unnecessary_lambdas                              # To make code more concise.
     - unnecessary_null_checks                          # To improve code readability.
     - use_enums                                        # To encourage use of the enhanced-enums language feature.
-    - use_if_null_to_convert_nulls_to_bools            # To improve code readability.
     - use_late_for_private_fields_and_variables        # To improve code readability.
     - use_named_constants                              # To improve code readability and consistency.
     - use_raw_strings                                  # To improve code readability.

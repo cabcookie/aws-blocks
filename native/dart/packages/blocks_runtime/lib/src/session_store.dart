@@ -76,10 +76,9 @@ class PersistentSessionStore implements SessionStore {
   final InMemorySessionStore _cache = InMemorySessionStore();
 
   PersistentSessionStore({
-    required TokenStore store,
-    String storageKey = '_session_cookies',
-  })  : _store = store,
-        _storageKey = storageKey;
+    required this._store,
+    this._storageKey = '_session_cookies',
+  });
 
   /// Hydrates the in-memory cache from the backing [TokenStore]. Call once at
   /// startup before issuing authenticated requests. Safe to call repeatedly.

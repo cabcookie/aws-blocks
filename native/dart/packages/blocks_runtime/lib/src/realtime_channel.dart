@@ -22,8 +22,8 @@ class RealtimeChannel<T> {
     required this.wsUrl,
     this.connectToken,
     required this.token,
-    required T Function(Map<String, dynamic>) deserializer,
-  }) : _deserializer = deserializer;
+    required this._deserializer,
+  });
 
   /// Hydrates a RealtimeChannel from a JSON descriptor.
   static RealtimeChannel<T> fromJson<T>(
